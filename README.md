@@ -5,8 +5,9 @@ This repo contains code described in the iOS tutorials at http://developers.arcg
 
 The ```master``` branch of this repository contains samples configured for the latest available version of [ArcGIS Runtime SDK for iOS](https://developers.arcgis.com/en/ios/). For samples configured for older versions of the SDK,  look under the ```Releases``` tab for a specific version.
 
-### Instructions
+## Instructions
 [New to Github? Get started here.](http://htmlpreview.github.com/?https://github.com/Esri/esri.github.com/blob/master/help/esri-getting-to-know-github.html)
+
 
 ## Requirements
 * XCode 5 (or higher)
@@ -47,3 +48,4 @@ A copy of the license is available in the repository's [license.txt]( https://ra
 
 [](Esri Tags: ArcGIS Runtime iOS SDK Samples)
 [](Esri Language: Objective-C)​
+
