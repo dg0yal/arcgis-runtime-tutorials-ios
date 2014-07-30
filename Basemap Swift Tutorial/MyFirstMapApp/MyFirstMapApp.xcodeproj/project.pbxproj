@@ -26,8 +26,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3E83AC9C19899ABF0048331B /* ArcGIS.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ArcGIS.bundle; path = "$HOME/Library/SDKs/ArcGIS/iOS/ArcGIS.framework/Versions/Current/Resources/ArcGIS.bundle"; sourceTree = "<absolute>"; };
-		3EA4C33A19898CDC006A2AA0 /* MyFirstMapApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyFirstMapApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E83AC9C19899ABF0048331B /* ArcGIS.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ArcGIS.bundle; path = $HOME/Library/SDKs/ArcGIS/iOS/ArcGIS.framework/Versions/Current/Resources/ArcGIS.bundle; sourceTree = "<absolute>"; };
+		3EA4C33A19898CDC006A2AA0 /* BasemapSwiftTutorial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BasemapSwiftTutorial.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EA4C33E19898CDC006A2AA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3EA4C33F19898CDC006A2AA0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3EA4C34119898CDC006A2AA0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -69,7 +69,7 @@
 		3EA4C33B19898CDC006A2AA0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3EA4C33A19898CDC006A2AA0 /* MyFirstMapApp.app */,
+				3EA4C33A19898CDC006A2AA0 /* BasemapSwiftTutorial.app */,
 				3EA4C34C19898CDC006A2AA0 /* MyFirstMapAppTests.xctest */,
 			);
 			name = Products;
@@ -129,7 +129,7 @@
 			);
 			name = MyFirstMapApp;
 			productName = MyFirstMapApp;
-			productReference = 3EA4C33A19898CDC006A2AA0 /* MyFirstMapApp.app */;
+			productReference = 3EA4C33A19898CDC006A2AA0 /* BasemapSwiftTutorial.app */;
 			productType = "com.apple.product-type.application";
 		};
 		3EA4C34B19898CDC006A2AA0 /* MyFirstMapAppTests */ = {
@@ -342,7 +342,7 @@
 					"-l",
 					"c++",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = BasemapSwiftTutorial;
 			};
 			name = Debug;
 		};
@@ -362,7 +362,7 @@
 					"-l",
 					"c++",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = BasemapSwiftTutorial;
 			};
 			name = Release;
 		};
