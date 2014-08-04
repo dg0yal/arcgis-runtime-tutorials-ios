@@ -30,7 +30,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
         //code from previous tutorial to add a basemap tiled layer
         //Add a basemap tiled layer
         var url = NSURL(string: "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer")
-        var tiledLayer = AGSTiledMapServiceLayer.tiledMapServiceLayerWithURL(url) as AGSTiledMapServiceLayer
+        var tiledLayer = AGSTiledMapServiceLayer(URL: url)
         self.mapView.addMapLayer(tiledLayer, withName: "Basemap Tiled Layer")
         
         //Set the map view's layer delegate
@@ -38,15 +38,15 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
         
         //CLOUD DATA
         var featureLayerURL = NSURL(string: "http://services.arcgis.com/oKgs2tbjK6zwTdvi/arcgis/rest/services/Major_World_Cities/FeatureServer/0")
-        var featureLayer = AGSFeatureLayer.featureServiceLayerWithURL(featureLayerURL, mode: .OnDemand) as AGSFeatureLayer
+        var featureLayer = AGSFeatureLayer(URL: featureLayerURL, mode: .OnDemand)
         self.mapView.addMapLayer(featureLayer, withName: "CloudData")
         
         //SYMBOLOGY
-        var featureSymbol = AGSSimpleMarkerSymbol.simpleMarkerSymbolWithColor(UIColor(red: 0, green: 0.46, blue: 0.68, alpha: 1)) as AGSSimpleMarkerSymbol
+        var featureSymbol = AGSSimpleMarkerSymbol(color:UIColor(red: 0, green: 0.46, blue: 0.68, alpha: 1))
         featureSymbol.size = CGSizeMake(7, 7)
         featureSymbol.style = .Circle
         featureSymbol.outline = nil
-        featureLayer.renderer = AGSSimpleRenderer.simpleRendererWithSymbol(featureSymbol) as AGSSimpleRenderer
+        featureLayer.renderer = AGSSimpleRenderer(symbol: featureSymbol)
     }
 
     override func didReceiveMemoryWarning() {
@@ -105,7 +105,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
         
         if !featureLayer.selectionSymbol {
             //SYMBOLOGY FOR WHERE CLAUSE SELECTION
-            var selectedFeatureSymbol = AGSSimpleMarkerSymbol.simpleMarkerSymbol() as AGSSimpleMarkerSymbol
+            var selectedFeatureSymbol = AGSSimpleMarkerSymbol()
             selectedFeatureSymbol.style = .Circle
             selectedFeatureSymbol.color = UIColor(red: 0.78, green: 0.3, blue: 0.19, alpha: 1)
             selectedFeatureSymbol.size = CGSizeMake(10, 10)
@@ -122,7 +122,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
         }
         else {
             //SELECT DATA WITH WHERE CLAUSE
-            var selectQuery = AGSQuery.query() as AGSQuery
+            var selectQuery = AGSQuery()
             var queryString = "COUNTRY = '\(countryName)'"
             selectQuery.`where` = queryString
             featureLayer.selectFeaturesWithQuery(selectQuery, selectionMethod: .New)
@@ -136,13 +136,13 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
     
     func featureLayer(featureLayer: AGSFeatureLayer!, operation op: NSOperation!, didSelectFeaturesWithFeatureSet featureSet: AGSFeatureSet!) {
         //ZOOM TO SELECTED DATA
-        var env:AGSMutableEnvelope?
-        for selectedFeature in featureSet.features {
+        var env:AGSMutableEnvelope!
+        for selectedFeature in featureSet.features as [AGSGraphic]{
             if env {
-                env!.unionWithEnvelope((selectedFeature as AGSGraphic).geometry.envelope)
+                env.unionWithEnvelope(selectedFeature.geometry.envelope)
             }
             else {
-                env = (selectedFeature as AGSGraphic).geometry.envelope.mutableCopy() as? AGSMutableEnvelope
+                env = selectedFeature.geometry.envelope.mutableCopy() as AGSMutableEnvelope
             }
         }
         self.mapView.zoomToGeometry(env, withPadding: 20, animated: true)
