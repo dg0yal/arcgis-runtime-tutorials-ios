@@ -20,9 +20,9 @@ import ArcGIS
 class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDelegate, AGSLocatorDelegate {
                             
     @IBOutlet weak var mapView: AGSMapView!
-    var graphicLayer:AGSGraphicsLayer?
-    var locator:AGSLocator?
-    var calloutTemplate:AGSCalloutTemplate?
+    var graphicLayer:AGSGraphicsLayer!
+    var locator:AGSLocator!
+    var calloutTemplate:AGSCalloutTemplate!
     
     override func prefersStatusBarHidden() -> Bool {
         return true
@@ -34,7 +34,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
         
         //Add a basemap tiled layer
         var url = NSURL(string: "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer")
-        var tiledLayer = AGSTiledMapServiceLayer.tiledMapServiceLayerWithURL(url) as AGSTiledMapServiceLayer
+        var tiledLayer = AGSTiledMapServiceLayer(URL: url)
         self.mapView.addMapLayer(tiledLayer, withName: "Basemap Tiled Layer")
         
         //Set the map view's layer delegate
@@ -63,19 +63,19 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
         
         if(!self.graphicLayer) {
             //Add a graphics layer to the map. This layer will hold geocoding results
-            self.graphicLayer = AGSGraphicsLayer.graphicsLayer() as? AGSGraphicsLayer
+            self.graphicLayer = AGSGraphicsLayer()
             self.mapView.addMapLayer(self.graphicLayer, withName:"Results")
             
             //Assign a simple renderer to the layer to display results as pushpins
             var pushpin = AGSPictureMarkerSymbol(imageNamed: "BluePushpin.png")
             pushpin.offset = CGPointMake(9, 16)
             pushpin.leaderPoint = CGPointMake(-9, 11)
-            var renderer = AGSSimpleRenderer.simpleRendererWithSymbol(pushpin) as AGSSimpleRenderer
-            self.graphicLayer!.renderer = renderer
+            var renderer = AGSSimpleRenderer(symbol: pushpin)
+            self.graphicLayer.renderer = renderer
         }
         else {
             //Clear out previous results if we already have a graphics layer
-            self.graphicLayer!.removeAllGraphics()
+            self.graphicLayer.removeAllGraphics()
         }
         
         
@@ -83,8 +83,8 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
             //Create the AGSLocator pointing to the geocode service on ArcGIS Online
             //Set the delegate so that we are informed through AGSLocatorDelegate methods
             var url = NSURL(string: "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer")
-            self.locator = AGSLocator.locatorWithURL(url) as? AGSLocator
-            self.locator!.delegate = self
+            self.locator = AGSLocator(URL: url)
+            self.locator.delegate = self
         }
         
         //Set the parameters
@@ -92,11 +92,11 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
         params.text = searchBar.text
         params.outFields = ["*"]
         params.outSpatialReference = self.mapView.spatialReference
-        params.location = AGSPoint.pointWithX(0, y: 0, spatialReference: nil)
+        params.location = AGSPoint(x: 0, y: 0, spatialReference: nil)
         
         //Kick off the geocoding operation
         //This will invoke the geocode service on a background thread
-        self.locator!.findWithParameters(params)
+        self.locator.findWithParameters(params)
     }
     
     //MARK: AGSLocator delegate methods
@@ -110,18 +110,18 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
             //Create a callout template if we haven't done so already
             if !self.calloutTemplate {
                 self.calloutTemplate = AGSCalloutTemplate()
-                self.calloutTemplate!.titleTemplate = "${Match_addr}"
-                self.calloutTemplate!.detailTemplate = "${DisplayY}\u{00b0} ${DisplayX}\u{00b0}"
+                self.calloutTemplate.titleTemplate = "${Match_addr}"
+                self.calloutTemplate.detailTemplate = "${DisplayY}\u{00b0} ${DisplayX}\u{00b0}"
                 
                 //Assign the callout template to the layer so that all graphics within this layer
                 //display their information in the callout in the same manner
-                self.graphicLayer!.calloutDelegate = self.calloutTemplate
+                self.graphicLayer.calloutDelegate = self.calloutTemplate
             }
             
             //Add a graphic for each result
-            for result in results {
-                var graphic = (result as AGSLocatorFindResult).graphic
-                self.graphicLayer!.addGraphic(graphic)
+            for result in results as [AGSLocatorFindResult] {
+                var graphic = result.graphic
+                self.graphicLayer.addGraphic(graphic)
             }
             
             //Zoom in to the results
