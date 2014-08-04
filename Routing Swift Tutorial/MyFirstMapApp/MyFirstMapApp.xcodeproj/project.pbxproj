@@ -28,7 +28,7 @@
 
 /* Begin PBXFileReference section */
 		3E2DC603198AE7CF00F60CE6 /* BluePushpin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BluePushpin.png; sourceTree = "<group>"; };
-		3E7D1F3C198948C900E7E527 /* GeocodingSwiftTutorial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GeocodingSwiftTutorial.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E7D1F3C198948C900E7E527 /* RoutingSwiftTutorial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoutingSwiftTutorial.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E7D1F40198948C900E7E527 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3E7D1F41198948C900E7E527 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3E7D1F43198948C900E7E527 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -71,7 +71,7 @@
 		3E7D1F3D198948C900E7E527 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3E7D1F3C198948C900E7E527 /* GeocodingSwiftTutorial.app */,
+				3E7D1F3C198948C900E7E527 /* RoutingSwiftTutorial.app */,
 				3E7D1F4E198948C900E7E527 /* MyFirstMapAppTests.xctest */,
 			);
 			name = Products;
@@ -132,7 +132,7 @@
 			);
 			name = MyFirstMapApp;
 			productName = MyFirstMapApp;
-			productReference = 3E7D1F3C198948C900E7E527 /* GeocodingSwiftTutorial.app */;
+			productReference = 3E7D1F3C198948C900E7E527 /* RoutingSwiftTutorial.app */;
 			productType = "com.apple.product-type.application";
 		};
 		3E7D1F4D198948C900E7E527 /* MyFirstMapAppTests */ = {
@@ -346,7 +346,7 @@
 					"-l",
 					"c++",
 				);
-				PRODUCT_NAME = GeocodingSwiftTutorial;
+				PRODUCT_NAME = RoutingSwiftTutorial;
 			};
 			name = Debug;
 		};
@@ -366,7 +366,7 @@
 					"-l",
 					"c++",
 				);
-				PRODUCT_NAME = GeocodingSwiftTutorial;
+				PRODUCT_NAME = RoutingSwiftTutorial;
 			};
 			name = Release;
 		};
