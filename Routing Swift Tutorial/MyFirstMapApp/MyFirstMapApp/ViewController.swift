@@ -72,7 +72,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
         //Hide the keyboard
         searchBar.resignFirstResponder()
         
-        if(!self.graphicLayer) {
+        if self.graphicLayer == nil {
             //Add a graphics layer to the map. This layer will hold geocoding results
             self.graphicLayer = AGSGraphicsLayer()
             self.mapView.addMapLayer(self.graphicLayer, withName:"Results")
@@ -90,7 +90,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
         }
         
         
-        if !self.locator {
+        if self.locator == nil {
             //Create the AGSLocator pointing to the geocode service on ArcGIS Online
             //Set the delegate so that we are informed through AGSLocatorDelegate methods
             var url = NSURL(string: "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer")
@@ -113,13 +113,13 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
     //MARK: AGSLocator delegate methods
     
     func locator(locator: AGSLocator!, operation op: NSOperation!, didFind results: [AnyObject]!) {
-        if !results || (results as Array).count == 0 {
+        if results == nil || (results as Array).count == 0 {
             //show alert if we didn't get results
             UIAlertView(title: "No Results", message: "No Results Found", delegate: nil, cancelButtonTitle: "OK").show()
         }
         else {
             //Create a callout template if we haven't done so already
-            if !self.calloutTemplate {
+            if self.calloutTemplate == nil {
                 self.calloutTemplate = AGSCalloutTemplate()
                 self.calloutTemplate.titleTemplate = "${Match_addr}"
                 self.calloutTemplate.detailTemplate = "${DisplayY}\u{00b0} ${DisplayX}\u{00b0}"
@@ -159,7 +159,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
         //update the banner
         self.directionsLabel.text = "Routing"
         
-        if !self.routeTask {
+        if self.routeTask == nil {
             self.routeTask = AGSRouteTask(URL: NSURL(string: "http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Network/USA/NAServer/Route"))
             self.routeTask.delegate = self
         }
@@ -197,40 +197,43 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
         self.directionsLabel.text = "Route computed"
         
         //Remove existing route from map (if it exists)
-        if self.routeResult {
+        if self.routeResult != nil {
             self.graphicLayer.removeGraphic(self.routeResult.routeGraphic)
         }
         
         //Check if you got any results back
-        if routeTaskResult.routeResults {
+        if routeTaskResult.routeResults != nil {
             //you know that you are only dealing with 1 route...
-            self.routeResult = routeTaskResult.routeResults[0] as AGSRouteResult
+            self.routeResult = routeTaskResult.routeResults[0] as? AGSRouteResult
             
-            //symbolize the returned route graphic
-            var yellowLine = AGSSimpleLineSymbol(color: UIColor.orangeColor(), width: 8.0)
-            self.routeResult.routeGraphic.symbol = yellowLine
-            
-            //add the graphic to the graphics layer
-            self.graphicLayer.addGraphic(self.routeResult!.routeGraphic)
-            
-            //enable the next button so the suer can traverse directions
-            self.nextBtn.enabled = true
-            self.prevBtn.enabled = false
-            self.currentDirectionGraphic = nil
-            
-            self.mapView.zoomToGeometry(self.routeResult.routeGraphic.geometry, withPadding: 100, animated: true)
+            if self.routeResult != nil {
+                println(self.routeResult)
+                println(self.routeResult.directions)
+                //symbolize the returned route graphic
+                var yellowLine = AGSSimpleLineSymbol(color: UIColor.orangeColor(), width: 8.0)
+                self.routeResult.routeGraphic.symbol = yellowLine
+                
+                //add the graphic to the graphics layer
+                self.graphicLayer.addGraphic(self.routeResult!.routeGraphic)
+                
+                //enable the next button so the suer can traverse directions
+                self.nextBtn.enabled = true
+                self.prevBtn.enabled = false
+                self.currentDirectionGraphic = nil
+                
+                self.mapView.zoomToGeometry(self.routeResult.routeGraphic.geometry, withPadding: 100, animated: true)
+                return
+            }
         }
-        else {
-            //show aler if you didn't get results
-            UIAlertView(title: "No Route", message: "No Routes Found", delegate: nil, cancelButtonTitle: "OK").show()
-        }
+        //show aler if you didn't get results
+        UIAlertView(title: "No Route", message: "No Routes Found", delegate: nil, cancelButtonTitle: "OK").show()
     }
     
     //MARK: actions
     
     @IBAction func prevBtnClicked(sender: AnyObject) {
         var index = 0
-        if self.currentDirectionGraphic {
+        if self.currentDirectionGraphic != nil {
             index = (self.routeResult.directions.graphics as NSArray).indexOfObject(self.currentDirectionGraphic)-1
 
         }
@@ -239,8 +242,8 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
     
     @IBAction func nextBtnClicked(sender: AnyObject) {
         var index = 0
-        if self.currentDirectionGraphic {
-            index =             (self.routeResult.directions.graphics as NSArray).indexOfObject(self.currentDirectionGraphic)+1
+        if self.currentDirectionGraphic != nil {
+            index = (self.routeResult.directions.graphics as NSArray).indexOfObject(self.currentDirectionGraphic)+1
 
         }
         self.displayDirectionForIndex(index)
