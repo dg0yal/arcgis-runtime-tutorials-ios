@@ -69,7 +69,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
             }, completion: nil)
     }
     
-    //MARK: map view layer delegate methods
+    //MARK: - map view layer delegate methods
     
     func mapViewDidLoad(mapView: AGSMapView!) {
         //do something now that the map is loaded
@@ -77,7 +77,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
         mapView.locationDisplay.startDataSource()
     }
     
-    //MARK: Actions
+    //MARK: - Actions
     
     @IBAction func showCountryPicker(sender:AnyObject) {
         self.showPickerView()
@@ -85,25 +85,26 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
     
     //MARK: Picker view data source methods
     
-    func numberOfComponentsInPickerView(pickerView: UIPickerView!) -> Int  {
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
         return 1
     }
     
-    func pickerView(pickerView: UIPickerView!, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return self.countries.count
     }
+
+    //MARK: - Picker view delegate methods
     
-    func pickerView(pickerView: UIPickerView!, titleForRow row: Int, forComponent component: Int) -> String! {
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
             return self.countries[row]
     }
     
-    //MARK: Picker view delegate methods
-    func pickerView(pickerView: UIPickerView!, didSelectRow row: Int, inComponent component: Int) {
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         var countryName = self.countries[row]
         
         var featureLayer = self.mapView.mapLayerForName("CloudData") as AGSFeatureLayer
         
-        if !featureLayer.selectionSymbol {
+        if featureLayer.selectionSymbol == nil {
             //SYMBOLOGY FOR WHERE CLAUSE SELECTION
             var selectedFeatureSymbol = AGSSimpleMarkerSymbol()
             selectedFeatureSymbol.style = .Circle
@@ -112,7 +113,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
             featureLayer.selectionSymbol = selectedFeatureSymbol
         }
         
-        if !featureLayer.queryDelegate {
+        if featureLayer.queryDelegate == nil {
             featureLayer.queryDelegate = self
         }
         
@@ -132,13 +133,13 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
         self.hidePickerView()
     }
     
-    //MARK: Feature layer query delegate methods
+    //MARK: - Feature layer query delegate methods
     
     func featureLayer(featureLayer: AGSFeatureLayer!, operation op: NSOperation!, didSelectFeaturesWithFeatureSet featureSet: AGSFeatureSet!) {
         //ZOOM TO SELECTED DATA
         var env:AGSMutableEnvelope!
         for selectedFeature in featureSet.features as [AGSGraphic]{
-            if env {
+            if env != nil {
                 env.unionWithEnvelope(selectedFeature.geometry.envelope)
             }
             else {
