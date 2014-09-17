@@ -137,7 +137,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
             //SELECT DATA WITH WHERE CLAUSE
             let selectQuery = AGSQuery()
             let queryString = "COUNTRY = '\(countryName)'"
-            selectQuery.`where` = queryString
+            selectQuery.whereClause = queryString
             featureLayer.selectFeaturesWithQuery(selectQuery, selectionMethod: .New)
         }
         
