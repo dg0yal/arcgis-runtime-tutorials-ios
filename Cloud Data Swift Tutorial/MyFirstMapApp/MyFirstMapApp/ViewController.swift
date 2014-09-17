@@ -20,29 +20,28 @@ import ArcGIS
 class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, AGSFeatureLayerQueryDelegate {
                             
     @IBOutlet weak var mapView: AGSMapView!
-    var countries:Array<String> = ["None", "US", "Canada", "France", "Australia", "Brazil"]
-    @IBOutlet weak var countryPicker: UIPickerView!
-    @IBOutlet weak var pickerViewYConstraint: NSLayoutConstraint!
+    let countries = ["None", "US", "Canada", "France", "Australia", "Brazil"]
+    var countryPicker: UIPickerView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         //code from previous tutorial to add a basemap tiled layer
         //Add a basemap tiled layer
-        var url = NSURL(string: "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer")
-        var tiledLayer = AGSTiledMapServiceLayer(URL: url)
+        let url = NSURL(string: "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer")
+        let tiledLayer = AGSTiledMapServiceLayer(URL: url)
         self.mapView.addMapLayer(tiledLayer, withName: "Basemap Tiled Layer")
         
         //Set the map view's layer delegate
         self.mapView.layerDelegate = self
         
         //CLOUD DATA
-        var featureLayerURL = NSURL(string: "http://services.arcgis.com/oKgs2tbjK6zwTdvi/arcgis/rest/services/Major_World_Cities/FeatureServer/0")
-        var featureLayer = AGSFeatureLayer(URL: featureLayerURL, mode: .OnDemand)
+        let featureLayerURL = NSURL(string: "http://services.arcgis.com/oKgs2tbjK6zwTdvi/arcgis/rest/services/Major_World_Cities/FeatureServer/0")
+        let featureLayer = AGSFeatureLayer(URL: featureLayerURL, mode: .OnDemand)
         self.mapView.addMapLayer(featureLayer, withName: "CloudData")
         
         //SYMBOLOGY
-        var featureSymbol = AGSSimpleMarkerSymbol(color:UIColor(red: 0, green: 0.46, blue: 0.68, alpha: 1))
+        let featureSymbol = AGSSimpleMarkerSymbol(color:UIColor(red: 0, green: 0.46, blue: 0.68, alpha: 1))
         featureSymbol.size = CGSizeMake(7, 7)
         featureSymbol.style = .Circle
         featureSymbol.outline = nil
@@ -54,19 +53,32 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
         // Dispose of any resources that can be recreated.
     }
     
-    //animate the picker view to show from the bottom
+    //show picker view
     func showPickerView() {
-        UIView.animateKeyframesWithDuration(0.3, delay: NSTimeInterval.abs(0.0), options: nil, animations: {
-            self.pickerViewYConstraint.constant = 0
-            self.view.layoutIfNeeded()
-            }, completion: nil)
+        //create the picker view for the first time
+        if self.countryPicker == nil {
+            self.countryPicker = UIPickerView()
+            self.countryPicker.delegate = self
+            self.countryPicker.dataSource = self
+            self.countryPicker.showsSelectionIndicator = true
+            self.countryPicker.backgroundColor = UIColor.whiteColor()
+            self.view.addSubview(self.countryPicker)
+            
+            self.countryPicker.setTranslatesAutoresizingMaskIntoConstraints(false)
+            //leading constraint
+            self.view.addConstraint(NSLayoutConstraint(item: self.countryPicker, attribute: NSLayoutAttribute.Leading, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.Leading, multiplier: 1.0, constant: 0))
+            //trailing constraint
+            self.view.addConstraint(NSLayoutConstraint(item: self.countryPicker, attribute: NSLayoutAttribute.Trailing, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.Trailing, multiplier: 1.0, constant: 0))
+            //bottom constraint
+            self.view.addConstraint(NSLayoutConstraint(item: self.countryPicker, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: self.view, attribute: NSLayoutAttribute.Bottom, multiplier: 1.0, constant: 0))
+        }
+        
+        self.countryPicker.hidden = false
     }
-    //animate the picker view to dismiss
+    
+    //hide picker view
     func hidePickerView() {
-        UIView.animateKeyframesWithDuration(0.3, delay: NSTimeInterval.abs(0.0), options: nil, animations: {
-            self.pickerViewYConstraint.constant = -self.countryPicker.bounds.size.height
-            self.view.layoutIfNeeded()
-            }, completion: nil)
+        self.countryPicker.hidden = true
     }
     
     //MARK: - map view layer delegate methods
@@ -100,13 +112,13 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
     }
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        var countryName = self.countries[row]
+        let countryName = self.countries[row]
         
-        var featureLayer = self.mapView.mapLayerForName("CloudData") as AGSFeatureLayer
+        let featureLayer = self.mapView.mapLayerForName("CloudData") as AGSFeatureLayer
         
         if featureLayer.selectionSymbol == nil {
             //SYMBOLOGY FOR WHERE CLAUSE SELECTION
-            var selectedFeatureSymbol = AGSSimpleMarkerSymbol()
+            let selectedFeatureSymbol = AGSSimpleMarkerSymbol()
             selectedFeatureSymbol.style = .Circle
             selectedFeatureSymbol.color = UIColor(red: 0.78, green: 0.3, blue: 0.19, alpha: 1)
             selectedFeatureSymbol.size = CGSizeMake(10, 10)
@@ -123,8 +135,8 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
         }
         else {
             //SELECT DATA WITH WHERE CLAUSE
-            var selectQuery = AGSQuery()
-            var queryString = "COUNTRY = '\(countryName)'"
+            let selectQuery = AGSQuery()
+            let queryString = "COUNTRY = '\(countryName)'"
             selectQuery.`where` = queryString
             featureLayer.selectFeaturesWithQuery(selectQuery, selectionMethod: .New)
         }
