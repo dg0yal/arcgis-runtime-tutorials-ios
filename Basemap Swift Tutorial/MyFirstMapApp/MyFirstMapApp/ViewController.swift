@@ -28,8 +28,8 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate {
         // Do any additional setup after loading the view, typically from a nib.
         
         //Add a basemap tiled layer
-        var url = NSURL(string: "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer")
-        var tiledLayer = AGSTiledMapServiceLayer(URL: url)
+        let url = NSURL(string: "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer")
+        let tiledLayer = AGSTiledMapServiceLayer(URL: url)
         self.mapView.addMapLayer(tiledLayer, withName: kBasemapLayerName)
         
         //Set the map view's layer delegate
@@ -76,7 +76,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate {
         self.mapView.removeMapLayerWithName(kBasemapLayerName)
         
         //add new Layer
-        var newBasemapLayer = AGSTiledMapServiceLayer(URL: basemapURL)
+        let newBasemapLayer = AGSTiledMapServiceLayer(URL: basemapURL)
         self.mapView.insertMapLayer(newBasemapLayer, withName: kBasemapLayerName, atIndex: 0);
     }
 }
