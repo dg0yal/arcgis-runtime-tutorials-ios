@@ -40,8 +40,8 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
         // Do any additional setup after loading the view, typically from a nib.
         
         //Add a basemap tiled layer
-        var url = NSURL(string: "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer")
-        var tiledLayer = AGSTiledMapServiceLayer(URL: url)
+        let url = NSURL(string: "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer")
+        let tiledLayer = AGSTiledMapServiceLayer(URL: url)
         self.mapView.addMapLayer(tiledLayer, withName: "Basemap Tiled Layer")
         
         //Set the map view's layer delegate
@@ -78,10 +78,10 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
             self.mapView.addMapLayer(self.graphicLayer, withName:"Results")
             
             //Assign a simple renderer to the layer to display results as pushpins
-            var pushpin = AGSPictureMarkerSymbol(imageNamed: "BluePushpin.png")
+            let pushpin = AGSPictureMarkerSymbol(imageNamed: "BluePushpin.png")
             pushpin.offset = CGPointMake(9, 16)
             pushpin.leaderPoint = CGPointMake(-9, 11)
-            var renderer = AGSSimpleRenderer(symbol: pushpin)
+            let renderer = AGSSimpleRenderer(symbol: pushpin)
             self.graphicLayer.renderer = renderer
         }
         else {
@@ -93,13 +93,13 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
         if self.locator == nil {
             //Create the AGSLocator pointing to the geocode service on ArcGIS Online
             //Set the delegate so that we are informed through AGSLocatorDelegate methods
-            var url = NSURL(string: "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer")
+            let url = NSURL(string: "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer")
             self.locator = AGSLocator(URL: url)
             self.locator.delegate = self
         }
         
         //Set the parameters
-        var params = AGSLocatorFindParameters()
+        let params = AGSLocatorFindParameters()
         params.text = searchBar.text
         params.outFields = ["*"]
         params.outSpatialReference = self.mapView.spatialReference
@@ -113,7 +113,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
     //MARK: AGSLocator delegate methods
     
     func locator(locator: AGSLocator!, operation op: NSOperation!, didFind results: [AnyObject]!) {
-        if results == nil || (results as Array).count == 0 {
+        if results == nil || results.count == 0 {
             //show alert if we didn't get results
             UIAlertView(title: "No Results", message: "No Results Found", delegate: nil, cancelButtonTitle: "OK").show()
         }
@@ -131,12 +131,12 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
             
             //Add a graphic for each result
             for result in results as [AGSLocatorFindResult] {
-                var graphic = result.graphic
+                let graphic = result.graphic
                 self.graphicLayer.addGraphic(graphic)
             }
             
             //Zoom in to the results
-            var extent = self.graphicLayer.fullEnvelope.mutableCopy() as AGSMutableEnvelope
+            let extent = self.graphicLayer.fullEnvelope.mutableCopy() as AGSMutableEnvelope
             extent.expandByFactor(1.5)
             self.mapView.zoomToEnvelope(extent, animated: true)
         }
@@ -149,8 +149,8 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
     //MARK: AGSCalloutDelegate methods
     
     func didClickAccessoryButtonForCallout(callout: AGSCallout!) {
-        var graphic = callout.representedObject as AGSGraphic
-        var destinationLocation = graphic.geometry
+        let graphic = callout.representedObject as AGSGraphic
+        let destinationLocation = graphic.geometry
         
         self.routeTo(destinationLocation)
     }
@@ -164,10 +164,10 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
             self.routeTask.delegate = self
         }
         
-        var params = AGSRouteTaskParameters()
+        let params = AGSRouteTaskParameters()
         
-        var firstStop = AGSStopGraphic(geometry: self.mapView.locationDisplay.mapLocation(), symbol: nil, attributes: nil)
-        var lastStop = AGSStopGraphic(geometry: destination, symbol: nil, attributes: nil)
+        let firstStop = AGSStopGraphic(geometry: self.mapView.locationDisplay.mapLocation(), symbol: nil, attributes: nil)
+        let lastStop = AGSStopGraphic(geometry: destination, symbol: nil, attributes: nil)
         
         params.setStopsWithFeatures([firstStop, lastStop])
         
@@ -206,15 +206,13 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
             //you know that you are only dealing with 1 route...
             self.routeResult = routeTaskResult.routeResults[0] as? AGSRouteResult
             
-            if self.routeResult != nil {
-                println(self.routeResult)
-                println(self.routeResult.directions)
+            if self.routeResult != nil && self.routeResult.routeGraphic != nil {
                 //symbolize the returned route graphic
-                var yellowLine = AGSSimpleLineSymbol(color: UIColor.orangeColor(), width: 8.0)
+                let yellowLine = AGSSimpleLineSymbol(color: UIColor.orangeColor(), width: 8.0)
                 self.routeResult.routeGraphic.symbol = yellowLine
                 
                 //add the graphic to the graphics layer
-                self.graphicLayer.addGraphic(self.routeResult!.routeGraphic)
+                self.graphicLayer.addGraphic(self.routeResult.routeGraphic)
                 
                 //enable the next button so the suer can traverse directions
                 self.nextBtn.enabled = true
@@ -229,13 +227,19 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
         UIAlertView(title: "No Route", message: "No Routes Found", delegate: nil, cancelButtonTitle: "OK").show()
     }
     
+    func routeTask(routeTask: AGSRouteTask!, operation op: NSOperation!, didFailSolveWithError error: NSError!) {
+        //show aler if you didn't get results
+        UIAlertView(title: "No Route", message: "No Routes Found : \(error.localizedDescription)", delegate: nil, cancelButtonTitle: "OK").show()
+    }
+    
     //MARK: actions
     
     @IBAction func prevBtnClicked(sender: AnyObject) {
         var index = 0
         if self.currentDirectionGraphic != nil {
-            index = (self.routeResult.directions.graphics as NSArray).indexOfObject(self.currentDirectionGraphic)-1
-
+            if let currentIndex = find(self.routeResult.directions.graphics as [AGSDirectionGraphic], self.currentDirectionGraphic) {
+                index = currentIndex - 1
+            }
         }
         self.displayDirectionForIndex(index)
     }
@@ -243,8 +247,9 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
     @IBAction func nextBtnClicked(sender: AnyObject) {
         var index = 0
         if self.currentDirectionGraphic != nil {
-            index = (self.routeResult.directions.graphics as NSArray).indexOfObject(self.currentDirectionGraphic)+1
-
+            if let currentIndex = find(self.routeResult.directions.graphics as [AGSDirectionGraphic], self.currentDirectionGraphic) {
+                index = currentIndex + 1
+            }
         }
         self.displayDirectionForIndex(index)
     }
@@ -254,18 +259,18 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
         self.graphicLayer.removeGraphic(self.currentDirectionGraphic)
         
         //get current direction and add it to the graphics layer
-        var directions = self.routeResult!.directions as AGSDirectionSet
+        let directions = self.routeResult.directions as AGSDirectionSet
         self.currentDirectionGraphic = directions.graphics[index] as AGSDirectionGraphic
         
         //highlight current manoeuver with a different symbol
-        var cs = AGSCompositeSymbol()
-        var sls1 = AGSSimpleLineSymbol()
+        let cs = AGSCompositeSymbol()
+        let sls1 = AGSSimpleLineSymbol()
         sls1.color = UIColor.whiteColor()
         sls1.style = .Solid
         sls1.width = 8
         cs.addSymbol(sls1)
     
-        var sls2 = AGSSimpleLineSymbol()
+        let sls2 = AGSSimpleLineSymbol()
         sls2.color = UIColor.redColor()
         sls2.style = .Dash
         sls2.width = 4
@@ -278,7 +283,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
         self.directionsLabel.text = self.currentDirectionGraphic.text
         
         //soom to envelope of the current direction (expanded by a factor of 1.3)
-        var env = self.currentDirectionGraphic.geometry.envelope.mutableCopy() as AGSMutableEnvelope
+        let env = self.currentDirectionGraphic.geometry.envelope.mutableCopy() as AGSMutableEnvelope
         env.expandByFactor(1.3)
         self.mapView.zoomToEnvelope(env, animated: true)
         

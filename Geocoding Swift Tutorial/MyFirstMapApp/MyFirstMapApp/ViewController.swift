@@ -33,8 +33,8 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
         // Do any additional setup after loading the view, typically from a nib.
         
         //Add a basemap tiled layer
-        var url = NSURL(string: "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer")
-        var tiledLayer = AGSTiledMapServiceLayer(URL: url)
+        let url = NSURL(string: "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer")
+        let tiledLayer = AGSTiledMapServiceLayer(URL: url)
         self.mapView.addMapLayer(tiledLayer, withName: "Basemap Tiled Layer")
         
         //Set the map view's layer delegate
@@ -57,7 +57,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
     
     //MARK: search bar delegate methods
     
-    func searchBarSearchButtonClicked(searchBar: UISearchBar!) {
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         //Hide the keyboard
         searchBar.resignFirstResponder()
         
@@ -67,10 +67,10 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
             self.mapView.addMapLayer(self.graphicLayer, withName:"Results")
             
             //Assign a simple renderer to the layer to display results as pushpins
-            var pushpin = AGSPictureMarkerSymbol(imageNamed: "BluePushpin.png")
+            let pushpin = AGSPictureMarkerSymbol(imageNamed: "BluePushpin.png")
             pushpin.offset = CGPointMake(9, 16)
             pushpin.leaderPoint = CGPointMake(-9, 11)
-            var renderer = AGSSimpleRenderer(symbol: pushpin)
+            let renderer = AGSSimpleRenderer(symbol: pushpin)
             self.graphicLayer.renderer = renderer
         }
         else {
@@ -82,13 +82,13 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
         if self.locator == nil {
             //Create the AGSLocator pointing to the geocode service on ArcGIS Online
             //Set the delegate so that we are informed through AGSLocatorDelegate methods
-            var url = NSURL(string: "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer")
+            let url = NSURL(string: "http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer")
             self.locator = AGSLocator(URL: url)
             self.locator.delegate = self
         }
         
         //Set the parameters
-        var params = AGSLocatorFindParameters()
+        let params = AGSLocatorFindParameters()
         params.text = searchBar.text
         params.outFields = ["*"]
         params.outSpatialReference = self.mapView.spatialReference
@@ -102,7 +102,7 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
     //MARK: AGSLocator delegate methods
     
     func locator(locator: AGSLocator!, operation op: NSOperation!, didFind results: [AnyObject]!) {
-        if results == nil || (results as Array).count == 0 {
+        if results == nil || results.count == 0 {
             //show alert if we didn't get results
             UIAlertView(title: "No Results", message: "No Results Found", delegate: nil, cancelButtonTitle: "OK").show()
         }
@@ -120,12 +120,11 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UISearchBarDele
             
             //Add a graphic for each result
             for result in results as [AGSLocatorFindResult] {
-                var graphic = result.graphic
-                self.graphicLayer.addGraphic(graphic)
+                self.graphicLayer.addGraphic(result.graphic)
             }
             
             //Zoom in to the results
-            var extent = self.graphicLayer!.fullEnvelope.mutableCopy() as AGSMutableEnvelope
+            let extent = self.graphicLayer.fullEnvelope.mutableCopy() as AGSMutableEnvelope
             extent.expandByFactor(1.5)
             self.mapView.zoomToEnvelope(extent, animated: true)
         }

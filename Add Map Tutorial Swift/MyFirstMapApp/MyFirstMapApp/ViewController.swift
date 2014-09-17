@@ -26,10 +26,10 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate {
         // Do any additional setup after loading the view, typically from a nib.
         
         //Add a basemap tiled layer
-        var url = NSURL(string: "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer")
-        var tiledLayer = AGSTiledMapServiceLayer(URL: url)
+        let url = NSURL(string: "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer")
+        let tiledLayer = AGSTiledMapServiceLayer(URL: url)
         self.mapView.addMapLayer(tiledLayer, withName: "Basemap Tiled Layer")
-        
+
         
         //Set the map view's layer delegate
         self.mapView.layerDelegate = self
