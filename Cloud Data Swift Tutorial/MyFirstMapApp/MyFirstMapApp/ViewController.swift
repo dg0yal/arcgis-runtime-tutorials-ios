@@ -53,8 +53,19 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
         // Dispose of any resources that can be recreated.
     }
     
-    //show picker view
-    func showPickerView() {
+    
+    
+    //MARK: - map view layer delegate methods
+    
+    func mapViewDidLoad(mapView: AGSMapView!) {
+        //do something now that the map is loaded
+        //for example, show the current location on the map
+        mapView.locationDisplay.startDataSource()
+    }
+    
+    //MARK: - Actions
+    
+    @IBAction func showCountryPicker(sender:AnyObject) {
         //create the picker view for the first time
         if self.countryPicker == nil {
             self.countryPicker = UIPickerView()
@@ -74,25 +85,6 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
         }
         
         self.countryPicker.hidden = false
-    }
-    
-    //hide picker view
-    func hidePickerView() {
-        self.countryPicker.hidden = true
-    }
-    
-    //MARK: - map view layer delegate methods
-    
-    func mapViewDidLoad(mapView: AGSMapView!) {
-        //do something now that the map is loaded
-        //for example, show the current location on the map
-        mapView.locationDisplay.startDataSource()
-    }
-    
-    //MARK: - Actions
-    
-    @IBAction func showCountryPicker(sender:AnyObject) {
-        self.showPickerView()
     }
     
     //MARK: Picker view data source methods
@@ -137,13 +129,14 @@ class ViewController: UIViewController, AGSMapViewLayerDelegate, UIPickerViewDel
             //SELECT DATA WITH WHERE CLAUSE
             let selectQuery = AGSQuery()
             let queryString = "COUNTRY = '\(countryName)'"
-            selectQuery.`where` = queryString
+            selectQuery.whereClause = queryString
             featureLayer.selectFeaturesWithQuery(selectQuery, selectionMethod: .New)
         }
         
         //DISMISS PICKER
-        self.hidePickerView()
+        self.countryPicker.hidden = true
     }
+    
     
     //MARK: - Feature layer query delegate methods
     

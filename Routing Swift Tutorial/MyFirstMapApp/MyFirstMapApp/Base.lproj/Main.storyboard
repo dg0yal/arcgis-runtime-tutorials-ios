@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6185.11" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment defaultVersion="1808" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6190.4"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="GeocodingSwiftTutorial" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="RoutingSwiftTutorial" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -40,20 +40,20 @@
                                             <constraint firstAttribute="height" constant="44" id="Hyo-cf-WcD"/>
                                         </constraints>
                                         <items>
-                                            <barButtonItem enabled="NO" image="prev32" id="5EB-hA-TCB">
+                                            <barButtonItem enabled="NO" image="prev32" id="5EB-hA-TCB" userLabel="Prev Btn">
                                                 <connections>
                                                     <action selector="prevBtnClicked:" destination="BYZ-38-t0r" id="BXn-Bp-X3H"/>
                                                 </connections>
                                             </barButtonItem>
                                             <barButtonItem style="plain" systemItem="flexibleSpace" id="NbP-39-sec"/>
-                                            <barButtonItem enabled="NO" image="next32" id="gTd-z5-TGA">
+                                            <barButtonItem enabled="NO" image="next32" id="gTd-z5-TGA" userLabel="Next Btn">
                                                 <connections>
                                                     <action selector="nextBtnClicked:" destination="BYZ-38-t0r" id="5F6-TO-ecc"/>
                                                 </connections>
                                             </barButtonItem>
                                         </items>
                                     </toolbar>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Tt-Kh-iQs">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Tt-Kh-iQs" userLabel="Directions Label">
                                         <rect key="frame" x="50" y="568" width="500" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="qbQ-ul-nVc"/>
@@ -88,7 +88,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="directionsLabel" destination="7Tt-Kh-iQs" id="15i-Rq-xQ1"/>
                         <outlet property="mapView" destination="E7P-Pj-g6W" id="dkw-BL-6NP"/>
                         <outlet property="nextBtn" destination="gTd-z5-TGA" id="1kN-AO-XxW"/>
                         <outlet property="prevBtn" destination="5EB-hA-TCB" id="Qa9-5k-2pi"/>
